@@ -1,4 +1,4 @@
-package com.example.fireballpredict;
+package com.redstoncoder.fireballpredict;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;

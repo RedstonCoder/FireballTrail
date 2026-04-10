@@ -1,4 +1,4 @@
-package com.example.fireballpredict;
+package com.redstoncoder.fireballpredict;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;

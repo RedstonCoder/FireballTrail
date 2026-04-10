@@ -1,4 +1,4 @@
-package com.example.fireballpredict;
+package com.redstoncoder.fireballpredict;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.projectile.EntityFireball;
