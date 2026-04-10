@@ -242,11 +242,11 @@ public class FireballTrajectoryRenderer {
         ny /= len;
         nz /= len;
 
-        double dot = ny;
+        double dot = nz;
         if (dot > 0.9999) {
             return;
         } else if (dot < -0.9999) {
-            GL11.glRotatef(180, 0, 0, 1);
+            GL11.glRotatef(180, 1, 0, 0);
             return;
         }
 
