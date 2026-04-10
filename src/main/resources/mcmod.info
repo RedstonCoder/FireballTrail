@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "fireballpredict",
+        "name": "FireballPredict",
+        "description": "A mod to predict fireball trajectories",
+        "version": "1.0.0",
+        "mcversion": "1.0.0,
+        "authors": [
+            "RedStonCoder"
+        ],
+        "credits": "",
+        "logoFile": "",
+        "screenshots": [],
+        "dependencies": []
+    }
+]
