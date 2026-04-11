@@ -31,7 +31,25 @@ public class FireballEventHandler {
 
                 TrajectoryResult result = FireballTrajectoryPredictor.predictTrajectory(fireball);
                 Vec3 landingPosition = FireballTrajectoryPredictor.predictLandingPosition(result.points);
-                FireballData.addFireball(entityId, result.points, landingPosition, result.impactTimeSeconds, result.collisionNormal);
+                
+                String debugText = null;
+                if (ModConfig.showDebugInfo) {
+                    double speed = Math.sqrt(
+                        fireball.motionX * fireball.motionX +
+                        fireball.motionY * fireball.motionY +
+                        fireball.motionZ * fireball.motionZ
+                    );
+                    debugText = String.format(
+                        "ID:%d Pos:[%.1f,%.1f,%.1f] Motion:[%.2f,%.2f,%.2f] Speed:%.2f Accel:[%.3f,%.3f,%.3f]",
+                        entityId,
+                        fireball.posX, fireball.posY, fireball.posZ,
+                        fireball.motionX, fireball.motionY, fireball.motionZ,
+                        speed,
+                        fireball.accelerationX, fireball.accelerationY, fireball.accelerationZ
+                    );
+                }
+                
+                FireballData.addFireball(entityId, result.points, landingPosition, result.impactTimeSeconds, result.collisionNormal, debugText);
             }
         }
 

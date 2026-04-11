@@ -26,20 +26,12 @@ public class FireballTrajectoryPredictor {
         double motionY = fireball.motionY;
         double motionZ = fireball.motionZ;
 
-        double accelerationX = fireball.accelerationX;
-        double accelerationY = fireball.accelerationY;
-        double accelerationZ = fireball.accelerationZ;
-
         trajectory.add(new Vec3(posX, posY, posZ));
 
         float impactTime = -1f;
         Vec3 collisionNormal = null;
 
         for (int i = 0; i < MAX_PREDICTION_TICKS; i++) {
-            motionX += accelerationX;
-            motionY += accelerationY;
-            motionZ += accelerationZ;
-
             double newPosX = posX + motionX;
             double newPosY = posY + motionY;
             double newPosZ = posZ + motionZ;

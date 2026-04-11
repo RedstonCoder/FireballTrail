@@ -24,6 +24,7 @@ public class FireballTrajectoryRenderer {
         Map<Integer, Vec3> landingSnapshot = FireballData.getLandingSnapshot();
         Map<Integer, Float> impactTimeSnapshot = FireballData.getImpactTimeSnapshot();
         Map<Integer, Vec3> normalSnapshot = FireballData.getCollisionNormalSnapshot();
+        Map<Integer, String> debugInfoSnapshot = FireballData.getDebugInfoSnapshot();
 
         if (trajectorySnapshot.isEmpty()) return;
 
@@ -70,6 +71,11 @@ public class FireballTrajectoryRenderer {
                 Vec3 lastPoint = trajectory.get(trajectory.size() - 1);
                 renderImpactTime(lastPoint, impactTimeSnapshot.get(entityId));
             }
+
+            if (ModConfig.showDebugInfo && debugInfoSnapshot.containsKey(entityId) && !trajectory.isEmpty()) {
+                Vec3 firstPoint = trajectory.get(0);
+                renderDebugText(firstPoint, debugInfoSnapshot.get(entityId));
+            }
         }
 
         if (ModConfig.showLandingMarker) {
@@ -103,6 +109,30 @@ public class FireballTrajectoryRenderer {
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         fr.drawStringWithShadow(text, -fr.getStringWidth(text) / 2, 0, 0xFFFF55);
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+
+        GL11.glPopMatrix();
+    }
+
+    private static void renderDebugText(Vec3 pos, String text) {
+        Minecraft mc = Minecraft.getMinecraft();
+        FontRenderer fr = mc.fontRendererObj;
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(pos.xCoord, pos.yCoord + 2.0, pos.zCoord);
+
+        GL11.glRotatef(-mc.getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(mc.getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
+
+        float scale = 0.015F;
+        GL11.glScalef(-scale, -scale, scale);
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+        fr.drawStringWithShadow(text, -fr.getStringWidth(text) / 2, 0, 0x00FFFF);
 
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_TEXTURE_2D);

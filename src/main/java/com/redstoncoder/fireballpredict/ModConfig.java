@@ -11,6 +11,7 @@ public class ModConfig {
     public static volatile boolean modEnabled = true;
     public static volatile boolean showLandingMarker = true;
     public static volatile boolean showImpactTime = true;
+    public static volatile boolean showDebugInfo = false;
     public static volatile float impactTimeFontSize = 0.03F;
     public static volatile int trajectoryColorR = 255;
     public static volatile int trajectoryColorG = 0;
@@ -29,6 +30,7 @@ public class ModConfig {
         modEnabled = config.getBoolean("modEnabled", "general", true, "Enable or disable the Fireball trajectory prediction module");
         showLandingMarker = config.getBoolean("showLandingMarker", "display", true, "Show the landing marker (crosshair circle) at predicted landing position");
         showImpactTime = config.getBoolean("showImpactTime", "display", true, "Show impact time text near trajectory endpoint");
+        showDebugInfo = config.getBoolean("showDebugInfo", "debug", false, "Show debug information (motion values, position, etc.) for each fireball");
         trajectoryColorR = config.getInt("trajectoryColorR", "color", 255, 0, 255, "Red component of trajectory line color (0-255)");
         trajectoryColorG = config.getInt("trajectoryColorG", "color", 0, 0, 255, "Green component of trajectory line color (0-255)");
         trajectoryColorB = config.getInt("trajectoryColorB", "color", 0, 0, 255, "Blue component of trajectory line color (0-255)");
@@ -45,6 +47,7 @@ public class ModConfig {
         config.get("general", "modEnabled", true).set(modEnabled);
         config.get("display", "showLandingMarker", true).set(showLandingMarker);
         config.get("display", "showImpactTime", true).set(showImpactTime);
+        config.get("debug", "showDebugInfo", false).set(showDebugInfo);
         config.get("color", "trajectoryColorR", 255).set(trajectoryColorR);
         config.get("color", "trajectoryColorG", 0).set(trajectoryColorG);
         config.get("color", "trajectoryColorB", 0).set(trajectoryColorB);

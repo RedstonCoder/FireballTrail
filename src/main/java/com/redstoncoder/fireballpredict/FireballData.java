@@ -13,6 +13,7 @@ public class FireballData {
     private static final Map<Integer, Vec3> landingPositions = new HashMap<Integer, Vec3>();
     private static final Map<Integer, Float> impactTimes = new HashMap<Integer, Float>();
     private static final Map<Integer, Vec3> collisionNormals = new HashMap<Integer, Vec3>();
+    private static final Map<Integer, String> debugInfo = new HashMap<Integer, String>();
 
     public static void addFireball(int entityId, List<Vec3> trajectory, Vec3 landingPosition) {
         addFireball(entityId, trajectory, landingPosition, -1f, null);
@@ -23,6 +24,10 @@ public class FireballData {
     }
 
     public static void addFireball(int entityId, List<Vec3> trajectory, Vec3 landingPosition, float impactTimeSeconds, Vec3 collisionNormal) {
+        addFireball(entityId, trajectory, landingPosition, impactTimeSeconds, collisionNormal, null);
+    }
+
+    public static void addFireball(int entityId, List<Vec3> trajectory, Vec3 landingPosition, float impactTimeSeconds, Vec3 collisionNormal, String debugText) {
         synchronized (dataLock) {
             trajectories.put(entityId, trajectory);
             landingPositions.put(entityId, landingPosition);
@@ -31,6 +36,9 @@ public class FireballData {
             }
             if (collisionNormal != null) {
                 collisionNormals.put(entityId, collisionNormal);
+            }
+            if (debugText != null) {
+                debugInfo.put(entityId, debugText);
             }
         }
     }
@@ -41,6 +49,7 @@ public class FireballData {
             landingPositions.remove(entityId);
             impactTimes.remove(entityId);
             collisionNormals.remove(entityId);
+            debugInfo.remove(entityId);
         }
     }
 
@@ -50,6 +59,7 @@ public class FireballData {
             cleanupMapEntries(landingPositions, currentIds);
             cleanupMapEntries(impactTimes, currentIds);
             cleanupMapEntries(collisionNormals, currentIds);
+            cleanupMapEntries(debugInfo, currentIds);
         }
     }
 
@@ -83,6 +93,12 @@ public class FireballData {
     public static Map<Integer, Vec3> getCollisionNormalSnapshot() {
         synchronized (dataLock) {
             return new HashMap<Integer, Vec3>(collisionNormals);
+        }
+    }
+
+    public static Map<Integer, String> getDebugInfoSnapshot() {
+        synchronized (dataLock) {
+            return new HashMap<Integer, String>(debugInfo);
         }
     }
 }
