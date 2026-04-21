@@ -2,6 +2,7 @@ package com.redstoncoder.fireballpredict;
 
 import net.minecraft.util.Vec3;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,11 @@ public class FireballData {
     private static final Map<Integer, Float> impactTimes = new HashMap<Integer, Float>();
     private static final Map<Integer, Vec3> collisionNormals = new HashMap<Integer, Vec3>();
     private static final Map<Integer, String> debugInfo = new HashMap<Integer, String>();
+
+    private static List<Vec3> heldTrajectory = null;
+    private static Vec3 heldLandingPosition = null;
+    private static Float heldImpactTime = null;
+    private static Vec3 heldCollisionNormal = null;
 
     public static void addFireball(int entityId, List<Vec3> trajectory, Vec3 landingPosition) {
         addFireball(entityId, trajectory, landingPosition, -1f, null);
@@ -99,6 +105,48 @@ public class FireballData {
     public static Map<Integer, String> getDebugInfoSnapshot() {
         synchronized (dataLock) {
             return new HashMap<Integer, String>(debugInfo);
+        }
+    }
+
+    public static void setHeldFireballData(List<Vec3> trajectory, Vec3 landingPosition, Float impactTime, Vec3 collisionNormal) {
+        synchronized (dataLock) {
+            heldTrajectory = trajectory;
+            heldLandingPosition = landingPosition;
+            heldImpactTime = impactTime;
+            heldCollisionNormal = collisionNormal;
+        }
+    }
+
+    public static void clearHeldFireballData() {
+        synchronized (dataLock) {
+            heldTrajectory = null;
+            heldLandingPosition = null;
+            heldImpactTime = null;
+            heldCollisionNormal = null;
+        }
+    }
+
+    public static List<Vec3> getHeldTrajectorySnapshot() {
+        synchronized (dataLock) {
+            return heldTrajectory != null ? new ArrayList<Vec3>(heldTrajectory) : null;
+        }
+    }
+
+    public static Vec3 getHeldLandingSnapshot() {
+        synchronized (dataLock) {
+            return heldLandingPosition;
+        }
+    }
+
+    public static Float getHeldImpactTimeSnapshot() {
+        synchronized (dataLock) {
+            return heldImpactTime;
+        }
+    }
+
+    public static Vec3 getHeldCollisionNormalSnapshot() {
+        synchronized (dataLock) {
+            return heldCollisionNormal;
         }
     }
 }

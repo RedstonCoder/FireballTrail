@@ -75,6 +75,63 @@ public class FireballTrajectoryPredictor {
         return trajectory.get(trajectory.size() - 1);
     }
 
+    public static TrajectoryResult predictHeldFireballTrajectory(World world, Vec3 startPos, Vec3 lookVec) {
+        List<Vec3> trajectory = new ArrayList<Vec3>();
+
+        double posX = startPos.xCoord;
+        double posY = startPos.yCoord;
+        double posZ = startPos.zCoord;
+
+        double motionX = 0;
+        double motionY = 0;
+        double motionZ = 0;
+
+        double accelX = lookVec.xCoord * 0.1;
+        double accelY = lookVec.yCoord * 0.1;
+        double accelZ = lookVec.zCoord * 0.1;
+
+        trajectory.add(new Vec3(posX, posY, posZ));
+
+        float impactTime = -1f;
+        Vec3 collisionNormal = null;
+
+        for (int i = 0; i < MAX_PREDICTION_TICKS; i++) {
+            motionX += accelX;
+            motionY += accelY;
+            motionZ += accelZ;
+
+            double newPosX = posX + motionX;
+            double newPosY = posY + motionY;
+            double newPosZ = posZ + motionZ;
+
+            Vec3 start = new Vec3(posX, posY, posZ);
+            Vec3 end = new Vec3(newPosX, newPosY, newPosZ);
+
+            MovingObjectPosition blockCollision = world.rayTraceBlocks(start, end);
+            MovingObjectPosition entityCollision = rayTraceEntities(world, start, end, null);
+
+            MovingObjectPosition collision = getClosestCollision(start, blockCollision, entityCollision);
+            if (collision != null) {
+                trajectory.add(collision.hitVec);
+                impactTime = (i + 1) / 20f;
+                collisionNormal = getCollisionNormal(collision);
+                break;
+            }
+
+            posX = newPosX;
+            posY = newPosY;
+            posZ = newPosZ;
+
+            trajectory.add(new Vec3(posX, posY, posZ));
+
+            if (posY < 0 || posY > 256 || Math.abs(posX) > 30000000 || Math.abs(posZ) > 30000000) {
+                break;
+            }
+        }
+
+        return new TrajectoryResult(trajectory, impactTime, impactTime >= 0, collisionNormal);
+    }
+
     private static Vec3 getCollisionNormal(MovingObjectPosition mop) {
         if (mop == null) return null;
         if (mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && mop.sideHit != null) {

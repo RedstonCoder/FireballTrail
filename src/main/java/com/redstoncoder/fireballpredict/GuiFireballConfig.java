@@ -10,6 +10,8 @@ public class GuiFireballConfig extends GuiScreen {
     private static final int BUTTON_MOD_TOGGLE = 100;
     private static final int BUTTON_MARKER_TOGGLE = 101;
     private static final int BUTTON_TIME_TOGGLE = 102;
+    private static final int BUTTON_DEBUG_TOGGLE = 103;
+    private static final int BUTTON_HELD_PREDICTION_TOGGLE = 104;
     private static final int BUTTON_COLOR_R_MINUS = 200;
     private static final int BUTTON_COLOR_R_PLUS = 201;
     private static final int BUTTON_COLOR_G_MINUS = 202;
@@ -29,6 +31,8 @@ public class GuiFireballConfig extends GuiScreen {
     private boolean modEnabled;
     private boolean showLandingMarker;
     private boolean showImpactTime;
+    private boolean showDebugInfo;
+    private boolean showHeldFireballPrediction;
     private int colorR, colorG, colorB, colorA;
     private float lineWidth;
     private float markerLineWidth;
@@ -38,6 +42,8 @@ public class GuiFireballConfig extends GuiScreen {
         this.modEnabled = ModConfig.modEnabled;
         this.showLandingMarker = ModConfig.showLandingMarker;
         this.showImpactTime = ModConfig.showImpactTime;
+        this.showDebugInfo = ModConfig.showDebugInfo;
+        this.showHeldFireballPrediction = ModConfig.showHeldFireballPrediction;
         this.colorR = ModConfig.trajectoryColorR;
         this.colorG = ModConfig.trajectoryColorG;
         this.colorB = ModConfig.trajectoryColorB;
@@ -50,13 +56,15 @@ public class GuiFireballConfig extends GuiScreen {
     public void initGui() {
         super.initGui();
         int centerX = this.width / 2;
-        int startY = this.height / 2 - 100;
+        int startY = this.height / 2 - 130;
 
         this.buttonList.add(new GuiButton(BUTTON_MOD_TOGGLE, centerX - 80, startY + 0, 160, 22, getToggleLabel("Mod Enabled", modEnabled)));
         this.buttonList.add(new GuiButton(BUTTON_MARKER_TOGGLE, centerX - 80, startY + 30, 160, 22, getToggleLabel("Show Landing Marker", showLandingMarker)));
         this.buttonList.add(new GuiButton(BUTTON_TIME_TOGGLE, centerX - 80, startY + 60, 160, 22, getToggleLabel("Show Impact Time", showImpactTime)));
+        this.buttonList.add(new GuiButton(BUTTON_DEBUG_TOGGLE, centerX - 80, startY + 90, 160, 22, getToggleLabel("Show Debug Info", showDebugInfo)));
+        this.buttonList.add(new GuiButton(BUTTON_HELD_PREDICTION_TOGGLE, centerX - 80, startY + 120, 160, 22, getToggleLabel("Held Prediction", showHeldFireballPrediction)));
 
-        int colorStartY = startY + 98;
+        int colorStartY = startY + 158;
         int rowHeight = 28;
 
         this.buttonList.add(new GuiButton(BUTTON_COLOR_R_MINUS, centerX - 90, colorStartY, 24, 20, "-"));
@@ -104,6 +112,14 @@ public class GuiFireballConfig extends GuiScreen {
             case BUTTON_TIME_TOGGLE:
                 showImpactTime = !showImpactTime;
                 button.displayString = getToggleLabel("Show Impact Time", showImpactTime);
+                break;
+            case BUTTON_DEBUG_TOGGLE:
+                showDebugInfo = !showDebugInfo;
+                button.displayString = getToggleLabel("Show Debug Info", showDebugInfo);
+                break;
+            case BUTTON_HELD_PREDICTION_TOGGLE:
+                showHeldFireballPrediction = !showHeldFireballPrediction;
+                button.displayString = getToggleLabel("Held Prediction", showHeldFireballPrediction);
                 break;
             case BUTTON_COLOR_R_MINUS:
                 colorR = Math.max(0, colorR - 15);
@@ -158,6 +174,8 @@ public class GuiFireballConfig extends GuiScreen {
         ModConfig.modEnabled = modEnabled;
         ModConfig.showLandingMarker = showLandingMarker;
         ModConfig.showImpactTime = showImpactTime;
+        ModConfig.showDebugInfo = showDebugInfo;
+        ModConfig.showHeldFireballPrediction = showHeldFireballPrediction;
         ModConfig.trajectoryColorR = colorR;
         ModConfig.trajectoryColorG = colorG;
         ModConfig.trajectoryColorB = colorB;
@@ -174,11 +192,11 @@ public class GuiFireballConfig extends GuiScreen {
         drawCenteredString(fontRendererObj, "Fireball Predict Config", width / 2, 18, 16777215);
 
         int centerX = width / 2;
-        int startY = this.height / 2 - 100;
+        int startY = this.height / 2 - 130;
 
         fontRendererObj.drawStringWithShadow("--- General Settings ---", centerX - 70, startY - 14, 10526880);
 
-        int colorStartY = startY + 98;
+        int colorStartY = startY + 158;
         fontRendererObj.drawStringWithShadow("--- Trajectory Line Color ---", centerX - 82, colorStartY - 14, 10526880);
 
         int rowHeight = 28;

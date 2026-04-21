@@ -87,6 +87,36 @@ public class FireballTrajectoryRenderer {
             }
         }
 
+        if (ModConfig.showHeldFireballPrediction) {
+            List<Vec3> heldTrajectory = FireballData.getHeldTrajectorySnapshot();
+            if (heldTrajectory != null && heldTrajectory.size() >= 2) {
+                GL11.glColor4f(r, g, b, a);
+                GL11.glLineWidth(ModConfig.trajectoryLineWidth);
+
+                GL11.glBegin(GL11.GL_LINE_STRIP);
+                for (Vec3 point : heldTrajectory) {
+                    GL11.glVertex3d(point.xCoord, point.yCoord, point.zCoord);
+                }
+                GL11.glEnd();
+
+                if (ModConfig.showImpactTime) {
+                    Float heldImpactTimeVal = FireballData.getHeldImpactTimeSnapshot();
+                    if (heldImpactTimeVal != null) {
+                        Vec3 lastPoint = heldTrajectory.get(heldTrajectory.size() - 1);
+                        renderImpactTime(lastPoint, heldImpactTimeVal);
+                    }
+                }
+
+                if (ModConfig.showLandingMarker) {
+                    Vec3 heldLanding = FireballData.getHeldLandingSnapshot();
+                    if (heldLanding != null) {
+                        Vec3 heldNormal = FireballData.getHeldCollisionNormalSnapshot();
+                        renderLandingMarker(heldLanding, r, g, b, heldNormal);
+                    }
+                }
+            }
+        }
+
         GL11.glPopMatrix();
         GL11.glPopAttrib();
     }
