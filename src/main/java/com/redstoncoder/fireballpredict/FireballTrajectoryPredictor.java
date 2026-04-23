@@ -75,7 +75,7 @@ public class FireballTrajectoryPredictor {
         return trajectory.get(trajectory.size() - 1);
     }
 
-    public static TrajectoryResult predictHeldFireballTrajectory(World world, Vec3 startPos, Vec3 lookVec) {
+    public static TrajectoryResult predictHeldFireballTrajectory(World world, Vec3 startPos, Vec3 lookVec, Entity excludeEntity) {
         List<Vec3> trajectory = new ArrayList<Vec3>();
 
         double posX = startPos.xCoord;
@@ -108,7 +108,7 @@ public class FireballTrajectoryPredictor {
             Vec3 end = new Vec3(newPosX, newPosY, newPosZ);
 
             MovingObjectPosition blockCollision = world.rayTraceBlocks(start, end);
-            MovingObjectPosition entityCollision = rayTraceEntities(world, start, end, null);
+            MovingObjectPosition entityCollision = rayTraceEntities(world, start, end, excludeEntity);
 
             MovingObjectPosition collision = getClosestCollision(start, blockCollision, entityCollision);
             if (collision != null) {
@@ -159,7 +159,7 @@ public class FireballTrajectoryPredictor {
         return new Vec3(0, 1, 0);
     }
 
-    private static MovingObjectPosition rayTraceEntities(World world, Vec3 start, Vec3 end, EntityFireball fireball) {
+    private static MovingObjectPosition rayTraceEntities(World world, Vec3 start, Vec3 end, Entity excludeEntity) {
         Entity closestEntity = null;
         double closestDistance = Double.MAX_VALUE;
 
@@ -174,7 +174,7 @@ public class FireballTrajectoryPredictor {
 
         List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, rayBB);
         for (Entity entity : entities) {
-            if (entity == fireball || !entity.canBeCollidedWith()) {
+            if (entity == excludeEntity || !entity.canBeCollidedWith()) {
                 continue;
             }
 

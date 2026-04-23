@@ -26,7 +26,7 @@ public class FireballTrajectoryRenderer {
         Map<Integer, Vec3> normalSnapshot = FireballData.getCollisionNormalSnapshot();
         Map<Integer, String> debugInfoSnapshot = FireballData.getDebugInfoSnapshot();
 
-        if (trajectorySnapshot.isEmpty()) return;
+        if (trajectorySnapshot.isEmpty() && !ModConfig.showHeldFireballPrediction) return;
 
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.thePlayer == null || mc.theWorld == null) return;

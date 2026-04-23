@@ -59,19 +59,24 @@ public class FireballEventHandler {
 
         if (ModConfig.showHeldFireballPrediction) {
             ItemStack heldItem = mc.thePlayer.inventory.getCurrentItem();
-            if (heldItem != null && heldItem.getItem() == Items.FIRE_CHARGE) {
-                Vec3 eyePos = new Vec3(
-                    mc.thePlayer.posX,
-                    mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(),
-                    mc.thePlayer.posZ
-                );
-                Vec3 lookVec = mc.thePlayer.getLookVec();
-                Vec3 startPos = eyePos.addVector(lookVec.xCoord * 0.5, lookVec.yCoord * 0.5, lookVec.zCoord * 0.5);
+            if (heldItem != null) {
+                String itemName = heldItem.getItem().getRegistryName();
+                if ("fire_charge".equals(itemName) || "minecraft:fire_charge".equals(itemName)) {
+                    Vec3 eyePos = new Vec3(
+                        mc.thePlayer.posX,
+                        mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(),
+                        mc.thePlayer.posZ
+                    );
+                    Vec3 lookVec = mc.thePlayer.getLookVec();
+                    Vec3 startPos = eyePos.addVector(lookVec.xCoord * 0.5, lookVec.yCoord * 0.5, lookVec.zCoord * 0.5);
 
-                TrajectoryResult result = FireballTrajectoryPredictor.predictHeldFireballTrajectory(mc.theWorld, startPos, lookVec);
-                Vec3 landingPos = FireballTrajectoryPredictor.predictLandingPosition(result.points);
-                Float impactTime = result.impactTimeSeconds > 0 ? result.impactTimeSeconds : null;
-                FireballData.setHeldFireballData(result.points, landingPos, impactTime, result.collisionNormal);
+                    TrajectoryResult result = FireballTrajectoryPredictor.predictHeldFireballTrajectory(mc.theWorld, startPos, lookVec, mc.thePlayer);
+                    Vec3 landingPos = FireballTrajectoryPredictor.predictLandingPosition(result.points);
+                    Float impactTime = result.impactTimeSeconds > 0 ? result.impactTimeSeconds : null;
+                    FireballData.setHeldFireballData(result.points, landingPos, impactTime, result.collisionNormal);
+                } else {
+                    FireballData.clearHeldFireballData();
+                }
             } else {
                 FireballData.clearHeldFireballData();
             }
